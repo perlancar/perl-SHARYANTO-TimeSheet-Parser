@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine;
+
+# VERSION
+
+Perinci::CmdLine->new(url => '/SHARYANTO/TaskTimer/Counter/total_daily_totals')->run;
+
+1;
+# ABSTRACT: Total daily totals
+# PODNAME: total-daily-totals
