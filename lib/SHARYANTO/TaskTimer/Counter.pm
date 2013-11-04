@@ -172,7 +172,10 @@ sub total_daily_totals {
     my %args = @_;
     my $str = $args{str} or return [400, "Please specify str"];
 
-    # XXX schema
+    # per-activity-type- & per-project breakdowns
+    my (%activities, %projects);
+
+        # XXX schema
     for (qw/min_date max_date/) {
         return [400, "Invalid value for $_, please use YYYY-MM-DD"]
             if defined($args{$_}) && $args{$_} !~ /\A\d{4}-\d\d-\d\d\z/;
