@@ -1,4 +1,10 @@
-Revision history for SHARYANTO-TaskTimer-Counter
+Revision history for SHARYANTO-TimeSheet-Parser
+
+0.02    2013-11-04 (Steven Haryanto) (not yet released)
+
+        - Rename dist from SHARYANTO-TaskTimer-Counter to
+          SHARYANTO-TimeSheet-Parser.
+
 
 0.01    2013-10-31 (Steven Haryanto)
 
