@@ -276,38 +276,42 @@ sub total_daily_totals {
         ( max_date=>$args{max_date} ) x !!defined($args{max_date}),
     );
 
-    my %activity_durs;
-    my %project_durs;
+    my %activity_mins;
+    my %project_mins;
     my $totmins = 0;
     for my $e (@$entries) {
         for my $d (@{ $e->{details} }) {
             $totmins += $d->{minutes};
-            $activity_durs{$d->{activity}} += $d->{minutes};
+            $activity_mins{$d->{activity}} += $d->{minutes};
             my $n = @{ $d->{projects} };
             for (@{ $d->{projects} }) {
-                $project_durs{$_} += $d->{minutes} / $n;
+                $project_mins{$_} += $d->{minutes} / $n;
             }
         }
     }
 
+    my %activity_durs;
+    my %project_durs;
     my %activity_durpcts;
     my %project_durpcts;
 
-    for (keys %activity_durs) {
-        $activity_durpcts{$_} = $activity_durs{$_}/$totmins*100;
-        $activity_durs{$_}    = _mins2dur($activity_durs{$_});
+    for (keys %activity_mins) {
+        $activity_durpcts{$_} = $activity_mins{$_}/$totmins*100;
+        $activity_durs{$_}    = _mins2dur($activity_mins{$_});
     }
-    for (keys %project_durs ) {
-        $project_durpcts{$_}  = $project_durs{$_}/$totmins*100;
-        $project_durs{$_}     = _mins2dur($project_durs{$_});
+    for (keys %project_mins ) {
+        $project_durpcts{$_}  = $project_mins{$_}/$totmins*100;
+        $project_durs{$_}     = _mins2dur($project_mins{$_});
     }
 
     [200, "OK", join("", _mins2dur($totmins)), {
         "func.breakdowns" => {
-            by_activity     => \%activity_durs,
-            by_project      => \%project_durs,
-            by_activity_pct => \%activity_durpcts,
-            by_project_pct  => \%project_durpcts,
+            activity_minutes   => \%activity_mins,
+            project_minutes    => \%project_mins,
+            activity_durations => \%activity_durs,
+            project_durations  => \%project_durs,
+            activity_durpcts   => \%activity_durpcts,
+            project_durpcts    => \%project_durpcts,
         },
     }];
 }
