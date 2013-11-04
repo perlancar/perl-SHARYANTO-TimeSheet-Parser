@@ -8,9 +8,9 @@ use Perinci::Sub::Util qw(err);
 
 # VERSION
 
-#require Exporter;
-#our @ISA       = qw(Exporter);
-#our @EXPORT_OK = qw(calc_hours_minutes);
+require Exporter;
+our @ISA       = qw(Exporter);
+our @EXPORT_OK = qw(calc_hours_minutes fill_in_daily_totals total_daily_totals);
 
 our %SPEC;
 
@@ -42,13 +42,13 @@ sub calc_hours_minutes {
 
     for (split /\s+/, $str) {
         #say "part=$_";
-        if (/^\+(\d\d):(\d\d)$/) {
+        if (/^\+(\d{2,6}):(\d\d)$/) {
             $h += $1;
             $m += $2;
-        } elsif (/^-(\d\d):(\d\d)$/) {
+        } elsif (/^-(\d{2,6}):(\d\d)$/) {
             $h -= $1;
             $m -= $2;
-        } elsif (my ($h1,$m1,$h2,$m2) = /^(\d\d):(\d\d)-(\d\d):(\d\d)$/) {
+        } elsif (my ($h1,$m1,$h2,$m2) = /^(\d{2,6}):(\d\d)-(\d{2,6}):(\d\d)$/) {
             if ($h2 < $h1 || $h2 <= $h1 && $m2 <= $m1) {
                 $h2 += 24;
             }
@@ -118,7 +118,7 @@ sub fill_in_daily_totals {
 
     for my $e (@entries) {
         my ($date, $total) =
-            $e =~ /\A\* \[(\d{4}-\d{2}-\d{2}) [^\]]*\] \((\+\d+:\d{2})?\)/
+            $e =~ /\A\* \[(\d{4}-\d{2}-\d{2}) [^\]]*\] \((\+\d\d:\d{2})?\)/
                 or return [400, "Invalid daily header in '$e'"];
         my @p;
         for (split /^/, $e) {
@@ -156,15 +156,33 @@ $SPEC{total_daily_totals} = {
             req     => 1,
             cmdline_src => 'stdin_or_files',
         },
+        min_date => {
+            summary => 'Only include entries with date not earlier than this',
+            schema  => 'str*', # XXX date
+            tags    => ['category:filtering'],
+        },
+        max_date => {
+            summary => 'Only include entries with date not later than this',
+            schema  => 'str*', # XXX date
+            tags    => ['category:filtering'],
+        },
     },
 };
 sub total_daily_totals {
     my %args = @_;
     my $str = $args{str} or return [400, "Please specify str"];
 
+    # XXX schema
+    for (qw/min_date max_date/) {
+        return [400, "Invalid value for $_, please use YYYY-MM-DD"]
+            if defined($args{$_}) && $args{$_} !~ /\A\d{4}-\d\d-\d\d\z/;
+    }
+
     my @p;
     for my $l (split /^/, $str) {
-        next unless $l =~ /\A\* \[(\d{4}-\d{2}-\d{2}) [^\]]*\] \((\+\d+:\d{2})\)/;
+        next unless $l =~ /\A\* \[(\d{4}-\d{2}-\d{2}) [^\]]*\] \((\+\d\d:\d{2})\)/;
+        next if $args{min_date} && $1 lt $args{min_date};
+        next if $args{max_date} && $1 gt $args{max_date};
         push @p, $2;
     }
     my $res = calc_hours_minutes(str => join(" ", @p));
