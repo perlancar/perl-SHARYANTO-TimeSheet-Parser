@@ -357,4 +357,9 @@ Format of C<weekly.org> (by example):
 
  XXX
 
+
+=head1 SEE ALSO
+
+L<SHARYANTO>
+
 =cut
