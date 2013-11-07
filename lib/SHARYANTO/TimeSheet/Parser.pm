@@ -219,9 +219,9 @@ sub parse_daily_sheet {
             $j++;
             $det =~ s/\n/ /g;
             $det =~ s/\s{2,}/ /g;
-            my ($dur0, $act, $projs, $desc) =
-                $det =~ /\A(.+?)\s*=\s*
-                         \(([\w-]+)\)\s*
+            my ($dur0, $acts, $projs, $desc) =
+                $det =~ /\A([^=]+)\s*=\s*
+                         \( ([\w-]+(?:\s*,\s*[\w-]+)*) \)\s*
                          ([\w-]+(?:\s*,\s*[\w-]+)*)\s*
                          (?::\s*(.+))?/xs
                     or die "Invalid detail #$j on entry #$i: $det";
@@ -232,7 +232,7 @@ sub parse_daily_sheet {
                 raw_duration => $dur0,
                 duration     => $dur,
                 minutes      => _dur2mins($dur),
-                activity     => $act,
+                activities   => [split /\s*,\s*/, $acts],
                 projects     => [split /\s*,\s*/, $projs],
                 description  => $desc,
             };
@@ -282,10 +282,13 @@ sub total_daily_totals {
     for my $e (@$entries) {
         for my $d (@{ $e->{details} }) {
             $totmins += $d->{minutes};
-            $activity_mins{$d->{activity}} += $d->{minutes};
-            my $n = @{ $d->{projects} };
-            for (@{ $d->{projects} }) {
-                $project_mins{$_} += $d->{minutes} / $n;
+            my $numacts = @{ $d->{activities} };
+            for my $act (@{ $d->{activities} }) {
+                $activity_mins{$act} += $d->{minutes} / $numacts;
+            }
+            my $numprojs = @{ $d->{projects} };
+            for my $proj (@{ $d->{projects} }) {
+                $project_mins{$proj} += $d->{minutes} / $numprojs;
             }
         }
     }
@@ -343,15 +346,15 @@ The format of C<daily.org> (hopefully quite evident from example):
  - 08:48-09:27 = +00:39 = (coding) pericmd: debug why default format recently no
    longer text-pretty (e.g. list-id-holidays or list-id-holidays --detail)
  - 14:54-15:15 = +00:19 = (design) ansitable: desain fitur2x
- - 15:39-16:55 = +01:16 = (coding) dux: bool
+ - 15:39-16:55 = +01:16 = (design, coding) dux: bool
 
 Each heading signifies a day. The heading contains a timestamp and a total
 working duration for that day (can be calculated using C<fill_in_daily_totals()>
 or through L<fill-in-daily-totals> script, I use Emacs and copy-paste to/from
 C<daily.org> and shell buffer). Inside the heading, there's a list containing
-duration for each task. The word after the equal sign and inside parentheses is
-called the task/activity type. After that comes the project name(s) followed by
-colon. After that comes detailed description.
+duration for each task. The word(s) after the equal sign and inside parentheses
+are called tasks/activity types. After that comes the project name(s) followed
+by colon. After that comes detailed description.
 
 Format of C<weekly.org> (by example):
 
