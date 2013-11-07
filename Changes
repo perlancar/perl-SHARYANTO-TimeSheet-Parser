@@ -1,5 +1,12 @@
 Revision history for SHARYANTO-TimeSheet-Parser
 
+0.04    2013-11-07 (Steven Haryanto)
+
+        - Fix scripts (haven't updated to new module name).
+
+        - Support multiple activities, e.g. "+01:30 = (coding, design) blah".
+
+
 0.03    2013-11-04 (Steven Haryanto)
 
         - total_daily_totals(): Tweak returned breakdowns data (provide minutes
