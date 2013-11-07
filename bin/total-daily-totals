@@ -8,7 +8,7 @@ use Perinci::CmdLine;
 
 # VERSION
 
-Perinci::CmdLine->new(url => '/SHARYANTO/TaskTimer/Counter/total_daily_totals')->run;
+Perinci::CmdLine->new(url => '/SHARYANTO/TimeSheet/Parser/total_daily_totals')->run;
 
 1;
 # ABSTRACT: Total daily totals

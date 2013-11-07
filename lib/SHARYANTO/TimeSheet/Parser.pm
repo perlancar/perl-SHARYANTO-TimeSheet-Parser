@@ -209,7 +209,7 @@ sub parse_daily_sheet {
         $i++;
         my ($date, $dets0) =
             $entry0 =~ /\A\[(\d{4}-\d\d-\d\d)[^\]]*\][^\n]*\n(.+)/s
-                or die "Invalid entry (#$i): $entry0";
+                or die "Invalid entry (#$i): <$entry0>";
         next if $args{min_date} && $date lt $args{min_date};
         next if $args{max_date} && $date gt $args{max_date};
         my $entry = {date => $date, details=>[]};
