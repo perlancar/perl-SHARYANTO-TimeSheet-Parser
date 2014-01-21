@@ -1,5 +1,12 @@
 Revision history for SHARYANTO-TimeSheet-Parser
 
+0.05    2014-01-21 (Steven Haryanto)
+
+        [BUG FIXES]
+
+        - calc_hours_minutes() was called as if it returned enveloped result.
+
+
 0.04    2013-11-07 (Steven Haryanto)
 
         - Fix scripts (haven't updated to new module name).
