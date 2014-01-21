@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 #use List::Util qw(sum);
-use Perinci::Sub::Util qw(err);
+#use Perinci::Sub::Util qw(err);
 
 # VERSION
 
@@ -156,7 +156,6 @@ sub fill_in_daily_totals {
             }
         }
         my $res = calc_hours_minutes(str => join(" ", @p));
-        return err($res) unless $res->[0] == 200;
         my $ctotal = $res->[2];
         if ($total) {
             return [409, "Wrong daily totals for '$e' (should've been $ctotal)"]
