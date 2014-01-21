@@ -218,9 +218,10 @@ sub parse_daily_sheet {
             $det =~ s/\n/ /g;
             $det =~ s/\s{2,}/ /g;
             my ($dur0, $acts, $projs, $desc) =
-                $det =~ /\A([^=]+)\s*=\s*
-                         \( ([\w-]+(?:\s*,\s*[\w-]+)*) \)\s*
-                         ([\w-]+(?:\s*,\s*[\w-]+)*)\s*
+                $det =~ /\A([^=]+)\s*=\s*                    # times
+                         (?: \+\d+:\d\d \s*=\s* )?           # optional item dur
+                         \( ([\w-]+(?:\s*,\s*[\w-]+)*) \)\s* # activity
+                         ([\w-]+(?:\s*,\s*[\w-]+)*)\s*       # project
                          (?::\s*(.+))?/xs
                     or die "Invalid detail #$j on entry #$i: $det";
             $desc =~ s/\s+\z//s if defined $desc;
