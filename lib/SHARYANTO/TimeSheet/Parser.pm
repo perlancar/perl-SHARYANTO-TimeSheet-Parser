@@ -155,8 +155,7 @@ sub fill_in_daily_totals {
                 # ignore other lines
             }
         }
-        my $res = calc_hours_minutes(str => join(" ", @p));
-        my $ctotal = $res->[2];
+        my $ctotal = calc_hours_minutes(str => join(" ", @p));
         if ($total) {
             return [409, "Wrong daily totals for '$e' (should've been $ctotal)"]
                 unless $total eq $ctotal;
