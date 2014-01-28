@@ -1,0 +1,102 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+use DateTime;
+use DateTime::Format::ISO8601;
+use File::Slurp;
+use Perinci::CmdLine;
+use SHARYANTO::String::Util qw(indent);
+use SHARYANTO::TimeSheet::Parser qw(total_daily_totals);
+use Text::ANSITable;
+
+# VERSION
+
+our %SPEC;
+
+$SPEC{gen_weekly_work_summary} = {
+    v => 1.1,
+    summary => 'Generate weekly work summary',
+    args => {
+        file => {
+            summary => 'Org document containing daily entries',
+            schema => 'str*',
+            #req => 1,
+            pos => 0,
+        },
+        date => {
+            summary => 'Pick a week by specifying a day in that week',
+            description => <<'_',
+
+A week is defined to start on Monday and end on Sunday, so the report is dated
+on the Sunday. You can pick a week by specifying a date between a particular
+Monday and Sunday.
+
+_
+        },
+    },
+};
+sub gen_weekly_work_summary {
+    my %args = @_;
+
+    my @text;
+
+    my $d = $args{date} ?
+        DateTime::Format::ISO8601->parse_datetime($args{date}) :
+              DateTime->today(time_zone => $ENV{TZ} // "UTC")->
+                  subtract(days => 7);
+    my $dow = $d->day_of_week;
+
+    my $d1 = $d->clone->subtract(days => $dow-1);
+    my $d2 = $d1->clone->add(days => 6);
+
+    my $res = total_daily_totals(
+        str => ~~read_file($args{file} // "$ENV{HOME}/notes/daily.org"),
+        min_date=>$d1->ymd, max_date=>$d2->ymd);
+
+    push @text, "** [", $d2->ymd, " Sun] (", $res->[2], ") weekly summary\n";
+
+    my $bd = $res->[3]{"func.breakdowns"};
+    my $proj_mins = $bd->{project_minutes};
+    my @projs = sort {$proj_mins->{$b} <=> $proj_mins->{$a}} keys %$proj_mins;
+    push @text, "- top 3 projects: ",
+        join(", ", grep {defined} @projs[0..2]), "\n";
+
+    my $act_mins = $bd->{activity_minutes};
+    my @acts = sort {$act_mins->{$b} <=> $act_mins->{$a}} keys %$act_mins;
+
+    my $t = Text::ANSITable->new(use_color=>0, use_box_chars=>0, use_utf8=>0);
+    $t->border_style("Default::single_ascii");
+    $t->columns(["project", "duration"]);
+    $t->set_column_style(duration => align => "right");
+    for (@projs) {
+        $t->add_row([$_,
+                     sprintf("%s (%.0f%%)",
+                             $bd->{project_durations}{$_},
+                             $bd->{project_durpcts}{$_},
+                         )]);
+    }
+    push @text, "- breakdown per project:\n", indent("  ", $t->draw);
+
+    $t = Text::ANSITable->new(use_color=>0, use_box_chars=>0, use_utf8=>0);
+    $t->border_style("Default::single_ascii");
+    $t->columns(["activity", "duration"]);
+    $t->set_column_style(duration => align => "right");
+    for (@acts) {
+        $t->add_row([$_,
+                     sprintf("%s (%.0f%%)",
+                             $bd->{activity_durations}{$_},
+                             $bd->{activity_durpcts}{$_},
+                         )]);
+    }
+    push @text, "- breakdown per activity:\n", indent("  ", $t->draw);;
+
+    [200, "OK", join("", @text)];
+}
+
+Perinci::CmdLine->new(url => '/main/gen_weekly_work_summary')->run;
+
+# ABSTRACT: Generate weekly work summary
+# PODNAME: gen-weekly-timesheet-report
