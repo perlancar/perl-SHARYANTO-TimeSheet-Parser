@@ -1,5 +1,11 @@
 Revision history for SHARYANTO-TimeSheet-Parser
 
+0.06    2014-01-28 (Steven Haryanto)
+
+        - Add script: gen-weekly-work-summary (imported/adjusted from my
+          personal script).
+
+
 0.05    2014-01-21 (Steven Haryanto)
 
         [BUG FIXES]
