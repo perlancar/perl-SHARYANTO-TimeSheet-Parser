@@ -6,7 +6,7 @@ use warnings;
 
 use DateTime;
 use DateTime::Format::ISO8601;
-use File::Slurp;
+use File::Slurp::Tiny qw(read_file);
 use Perinci::CmdLine;
 use SHARYANTO::String::Util qw(indent);
 use SHARYANTO::TimeSheet::Parser qw(total_daily_totals);
