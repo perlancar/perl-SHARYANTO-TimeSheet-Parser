@@ -1,5 +1,12 @@
 Revision history for SHARYANTO-TimeSheet-Parser
 
+0.07    2014-05-17 (Steven Haryanto)
+
+        - No functional changes.
+
+        - Replace File::Slurp with File::Slurp::Tiny.
+
+
 0.06    2014-01-28 (Steven Haryanto)
 
         - Add script: gen-weekly-work-summary (imported/adjusted from my
