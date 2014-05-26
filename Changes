@@ -1,5 +1,10 @@
 Revision history for SHARYANTO-TimeSheet-Parser
 
+0.08    2014-05-26 (Steven Haryanto)
+
+        - Allow summary item (item which does not contain time).
+
+
 0.07    2014-05-17 (Steven Haryanto)
 
         - No functional changes.
