@@ -102,6 +102,8 @@ $SPEC{fill_in_daily_totals} = {
 Given something like this:
 
     * [2013-04-05 Fri] () blah
+      - summary :: some text which do not contain time, can be used
+                   to describe your day.
       - +01:10 = (coding) blah 1
       - +02:00 = (coding) blah 2
     * [2013-04-04 Thu] () blah
@@ -112,6 +114,8 @@ Given something like this:
 will return the entries with daily totals filled in:
 
     * [2013-04-05 Fri] (+03:10) blah
+      - summary :: some text which do not contain time, can be used
+                   to describe your day.
       - +01:10 = (coding) blah 1
       - +02:00 = (coding) blah 2
     * [2013-04-04 Thu] (+04:45) blah
@@ -214,6 +218,7 @@ sub parse_daily_sheet {
         my $j = 0;
         for my $det (split /^- /ms, $dets0) {
             next unless $det =~ /\S/;
+            next if $det =~ /^([^:]+) :: /; # summary list item
             $j++;
             $det =~ s/\n/ /g;
             $det =~ s/\s{2,}/ /g;
@@ -341,6 +346,8 @@ parse the C<daily.org> and total the durations to C<weekly.org> and so on.
 The format of C<daily.org> (hopefully quite evident from example):
 
  * [2013-04-05 Fri] (+02:05)
+ - summary :: optional list item which does not contain times and can be used
+              to describe your day.
  - 07:36-08:25 -00:10 = +00:41 = (notes) priv-notes, priv-finance: nyicil utang
  - 08:48-09:27 = +00:39 = (coding) pericmd: debug why default format recently no
    longer text-pretty (e.g. list-id-holidays or list-id-holidays --detail)
