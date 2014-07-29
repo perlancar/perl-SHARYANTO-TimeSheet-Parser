@@ -1,5 +1,10 @@
 Revision history for SHARYANTO-TimeSheet-Parser
 
+0.10    2014-07-30 (SHARYANTO)
+
+        - Allow empty day.
+
+
 0.09    2014-07-02 (SHARYANTO)
 
         - No functional changes.
