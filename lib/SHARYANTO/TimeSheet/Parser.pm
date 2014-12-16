@@ -24,6 +24,7 @@ our %SPEC;
 
 $SPEC{calc_hours_minutes} = {
     v => 1.1,
+    summary => 'Total hours and minutes',
     args => {
         str => {
             summary => 'durations specification',
