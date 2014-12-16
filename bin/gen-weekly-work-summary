@@ -100,4 +100,4 @@ sub gen_weekly_work_summary {
 Perinci::CmdLine->new(url => '/main/gen_weekly_work_summary')->run;
 
 # ABSTRACT: Generate weekly work summary
-# PODNAME: gen-weekly-timesheet-report
+# PODNAME:

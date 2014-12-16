@@ -12,4 +12,4 @@ Perinci::CmdLine->new(url => '/SHARYANTO/TimeSheet/Parser/calc_hours_minutes')->
 
 1;
 # ABSTRACT: Total hours and minutes
-# PODNAME: calchm
+# PODNAME:
