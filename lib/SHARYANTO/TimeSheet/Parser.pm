@@ -1,13 +1,14 @@
 package SHARYANTO::TimeSheet::Parser;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
 
 #use List::Util qw(sum);
 #use Perinci::Sub::Util qw(err);
-
-# VERSION
 
 # i currently don't like periexp because it brings in wrapping (and thus dsah
 # etc), i don't like the slight overhead.
@@ -21,6 +22,11 @@ our @EXPORT_OK = qw(
                );
 
 our %SPEC;
+
+$SPEC{':package'} = {
+    v => 1.1,
+    summary => 'Parse my timesheet documents',
+};
 
 $SPEC{calc_hours_minutes} = {
     v => 1.1,
@@ -325,7 +331,7 @@ sub total_daily_totals {
 }
 
 1;
-# ABSTRACT: Parse my timesheet documents
+# ABSTRACT:
 
 =head1 SYNOPSIS
 
