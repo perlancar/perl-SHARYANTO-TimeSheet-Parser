@@ -1,6 +1,8 @@
 package SHARYANTO::TimeSheet::Parser;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 use 5.010001;
