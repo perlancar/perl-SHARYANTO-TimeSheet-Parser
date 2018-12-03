@@ -1,0 +1,113 @@
+#!perl
+
+# DATE
+# VERSION
+
+use 5.010001;
+use strict;
+use warnings;
+
+use DateTime;
+use DateTime::Format::ISO8601;
+use File::Slurp::Tiny qw(read_file);
+use Perinci::CmdLine::Any;
+use String::Indent qw(indent);
+use SHARYANTO::TimeSheet::Parser qw(total_daily_totals);
+use Text::ANSITable;
+
+our %SPEC;
+
+$SPEC{gen_monthly_work_summary} = {
+    v => 1.1,
+    summary => 'Generate monthly work summary',
+    args => {
+        file => {
+            summary => 'Org document containing daily entries',
+            schema => 'str*',
+            #req => 1,
+            pos => 0,
+        },
+        month => {
+            summary => 'Pick a month',
+            schema => ['int*', between=>[1,12]],
+            description => <<'_',
+
+Defaults to current month.
+
+_
+            cmdline_aliases => {m=>{}},
+        },
+        year => {
+            summary => 'Pick a year',
+            schema => ['int*', between=>[1900,9999]],
+            description => <<'_',
+
+Defaults to current month.
+
+_
+            cmdline_aliases => {y=>{}},
+        },
+    },
+};
+sub gen_monthly_work_summary {
+    my %args = @_;
+
+    my @text;
+
+    my @lt_now = localtime;
+    my $month = $args{month} // $lt_now[4]+1;
+    my $year  = $args{year}  // $lt_now[5]+1900;
+
+    my $d1 = DateTime->new(year=>$year, month=>$month, day=>1)->subtract(months => 1);
+    my $d2 = $d1->clone->add(months => 1)->subtract(days => 1);
+
+    my $res = total_daily_totals(
+        str => ~~read_file($args{file} // "$ENV{HOME}/notes/daily.org"),
+        min_date=>$d1->ymd, max_date=>$d2->ymd);
+
+    push @text, "** [", $d2->ymd, " Sun] (", $res->[2], ") monthly summary\n";
+
+    my $bd = $res->[3]{"func.breakdowns"};
+    my $proj_mins = $bd->{project_minutes};
+    my @projs = sort {$proj_mins->{$b} <=> $proj_mins->{$a}} keys %$proj_mins;
+    push @text, "- top 3 projects: ",
+        join(", ", grep {defined} @projs[0..2]), "\n";
+
+    my $act_mins = $bd->{activity_minutes};
+    my @acts = sort {$act_mins->{$b} <=> $act_mins->{$a}} keys %$act_mins;
+
+    my $t = Text::ANSITable->new(use_color=>0, use_box_chars=>0, use_utf8=>0);
+    $t->border_style("Default::single_ascii");
+    $t->columns(["project", "duration"]);
+    $t->set_column_style(duration => align => "right");
+    for (@projs) {
+        $t->add_row([$_,
+                     sprintf("%s (%.0f%%)",
+                             $bd->{project_durations}{$_},
+                             $bd->{project_durpcts}{$_},
+                         )]);
+    }
+    push @text, "- breakdown per project:\n", indent("  ", $t->draw);
+
+    $t = Text::ANSITable->new(use_color=>0, use_box_chars=>0, use_utf8=>0);
+    $t->border_style("Default::single_ascii");
+    $t->columns(["activity", "duration"]);
+    $t->set_column_style(duration => align => "right");
+    for (@acts) {
+        $t->add_row([$_,
+                     sprintf("%s (%.0f%%)",
+                             $bd->{activity_durations}{$_},
+                             $bd->{activity_durpcts}{$_},
+                         )]);
+    }
+    push @text, "- breakdown per activity:\n", indent("  ", $t->draw);;
+
+    [200, "OK", join("", @text)];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/gen_monthly_work_summary',
+)->run;
+
+# ABSTRACT:
+# PODNAME:
