@@ -9,7 +9,7 @@ use warnings;
 
 use DateTime;
 use DateTime::Format::ISO8601;
-use File::Slurp::Tiny qw(read_file);
+use File::Slurper qw(read_text);
 use Perinci::CmdLine::Any;
 use String::Indent qw(indent);
 use SHARYANTO::TimeSheet::Parser qw(total_daily_totals);
@@ -55,7 +55,7 @@ sub gen_weekly_work_summary {
     my $d2 = $d1->clone->add(days => 6);
 
     my $res = total_daily_totals(
-        str => ~~read_file($args{file} // "$ENV{HOME}/notes/daily.org"),
+        str => read_text($args{file} // "$ENV{HOME}/notes/daily.org"),
         min_date=>$d1->ymd, max_date=>$d2->ymd);
 
     push @text, "** [", $d2->ymd, " Sun] (", $res->[2], ") weekly summary\n";

@@ -47,9 +47,13 @@ Total a series of hh:mm-hh:mm (time1-time2), or +hh:mm (add), or -hh:mm
 _
         },
     },
-    examples => [
-        {argv=>['08:30-10:10','+02:00','-01:00'], result=>'02:40'},
-    ],
+
+    # argh, the tools are fucked up still
+
+    #examples => [
+    #    {argv=>['08:30-10:10 +02:00 -01:00'], result=>'02:40'},
+    #],
+
     result_naked => 1,
 };
 sub calc_hours_minutes {

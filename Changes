@@ -1,3 +1,12 @@
+0.130   2018-12-03 (Steven Haryanto)
+
+	- Updates to make scripts work again (Perinci::CmdLine ->
+          Perinci::CmdLine::Any). Replace File::Slurp::Tiny with File::Slurper.
+
+	- Add scripts: gen-monthly-work-summary & gen-work-summary (accepts
+	  two dates).
+
+
 0.12    2014-12-14 (Steven Haryanto)
 
 	- [dist] Update license/copyright data.
