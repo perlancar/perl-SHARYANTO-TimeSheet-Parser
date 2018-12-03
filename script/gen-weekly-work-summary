@@ -10,7 +10,7 @@ use warnings;
 use DateTime;
 use DateTime::Format::ISO8601;
 use File::Slurp::Tiny qw(read_file);
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 use String::Indent qw(indent);
 use SHARYANTO::TimeSheet::Parser qw(total_daily_totals);
 use Text::ANSITable;
@@ -29,6 +29,7 @@ $SPEC{gen_weekly_work_summary} = {
         },
         date => {
             summary => 'Pick a week by specifying a day in that week',
+            schema => 'date*',
             description => <<'_',
 
 A week is defined to start on Monday and end on Sunday, so the report is dated
@@ -97,7 +98,9 @@ sub gen_weekly_work_summary {
     [200, "OK", join("", @text)];
 }
 
-Perinci::CmdLine->new(url => '/main/gen_weekly_work_summary')->run;
+Perinci::CmdLine::Any->new(
+    url => '/main/gen_weekly_work_summary',
+)->run;
 
 # ABSTRACT:
 # PODNAME:
