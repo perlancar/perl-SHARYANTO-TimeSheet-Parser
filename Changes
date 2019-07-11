@@ -1,4 +1,4 @@
-0.130   2018-12-03 (Steven Haryanto)
+0.130   2018-12-03  Released-By: Steven Haryanto
 
 	- Updates to make scripts work again (Perinci::CmdLine ->
           Perinci::CmdLine::Any). Replace File::Slurp::Tiny with File::Slurper.
@@ -7,12 +7,12 @@
 	  two dates).
 
 
-0.12    2014-12-14 (Steven Haryanto)
+0.12    2014-12-14  Released-By: Steven Haryanto
 
 	- [dist] Update license/copyright data.
 
 
-0.11    2014-12-10 (PERLANCAR)
+0.11    2014-12-10  Released-By: PERLANCAR
 
 	- No functional changes.
 
@@ -20,12 +20,12 @@
 	  String::Indent.
 
 
-0.10    2014-07-30 (SHARYANTO)
+0.10    2014-07-30  Released-By: SHARYANTO
 
         - Allow empty day.
 
 
-0.09    2014-07-02 (SHARYANTO)
+0.09    2014-07-02  Released-By: SHARYANTO
 
         - No functional changes.
 
@@ -34,50 +34,50 @@
           installing [RT#96884]
 
 
-0.08    2014-05-26 (Steven Haryanto)
+0.08    2014-05-26  Released-By: Steven Haryanto
 
         - Allow summary item (item which does not contain time).
 
 
-0.07    2014-05-17 (Steven Haryanto)
+0.07    2014-05-17  Released-By: Steven Haryanto
 
         - No functional changes.
 
         - Replace File::Slurp with File::Slurp::Tiny.
 
 
-0.06    2014-01-28 (Steven Haryanto)
+0.06    2014-01-28  Released-By: Steven Haryanto
 
         - Add script: gen-weekly-work-summary (imported/adjusted from my
           personal script).
 
 
-0.05    2014-01-21 (Steven Haryanto)
+0.05    2014-01-21  Released-By: Steven Haryanto
 
         [BUG FIXES]
 
         - calc_hours_minutes() was called as if it returned enveloped result.
 
 
-0.04    2013-11-07 (Steven Haryanto)
+0.04    2013-11-07  Released-By: Steven Haryanto
 
         - Fix scripts (haven't updated to new module name).
 
         - Support multiple activities, e.g. "+01:30 = (coding, design) blah".
 
 
-0.03    2013-11-04 (Steven Haryanto)
+0.03    2013-11-04  Released-By: Steven Haryanto
 
         - total_daily_totals(): Tweak returned breakdowns data (provide minutes
           as well as durations for convenience).
 
 
-0.02    2013-11-04 (Steven Haryanto)
+0.02    2013-11-04  Released-By: Steven Haryanto
 
         - Rename dist from SHARYANTO-TaskTimer-Counter to
           SHARYANTO-TimeSheet-Parser.
 
 
-0.01    2013-10-31 (Steven Haryanto)
+0.01    2013-10-31  Released-By: Steven Haryanto
 
         - First release. Modulified from my scripts.
